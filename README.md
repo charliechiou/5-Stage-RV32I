@@ -31,10 +31,12 @@ Pipeline registers are used between stages to store intermediate data and contro
 The Top module connects all the stages of the pipeline and handles the flow of data through the pipeline registers. Below is a brief overview of its components:
 
 - **Input/Output**:
+
   - `in`: Input signal to the processor.
   - `out`: Output signal from the processor.
 
 - **Pipeline Stages**:
+
   - `fetch`: Instruction Fetch stage.
   - `decoder`: Instruction Decode stage.
   - `execute`: Execute stage.
@@ -42,15 +44,16 @@ The Top module connects all the stages of the pipeline and handles the flow of d
   - `writeBack`: Write Back stage.
 
 - **Pipeline Registers**:
+
   - Registers between each stage are used to pass data and control signals.
 
 - **Control Logic**:
   - Various Mux and control signals ensure correct data flow and pipeline operation.
 
-
 ## Test Cases
 
 ### Program 1
+
 ```assembly
 addi x5 x0 0
 addi x6 x0 5
@@ -64,6 +67,7 @@ ANS: lw x7 100(x0)
 ```
 
 ### Program 2
+
 ```assembly
 addi x5 x0 3
 LOOP:
@@ -75,6 +79,7 @@ bne x5 x7 LOOP
 ```
 
 ### Program 3
+
 ```assembly
 addi x5 x0 0
 addi x7 x0 1
@@ -133,3 +138,9 @@ sbt test
 - Implement hazard detection and forwarding logic.
 - Add support for more RISC-V instructions.
 - Optimize performance with advanced pipelining techniques.
+
+## Document and Branch prediction
+
+Project Documentation: [HackMD Document](https://hackmd.io/@sysprog/SJTSoPl8yx)
+
+- Introduce branch prediction mechanisms into the 5-Stage-RV32I project and thoroughly validate them.

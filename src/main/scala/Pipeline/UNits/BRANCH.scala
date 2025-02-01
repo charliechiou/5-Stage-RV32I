@@ -8,34 +8,21 @@ class Branch extends Module {
     val branch = Input(Bool())
     val arg_x = Input(SInt(32.W))
     val arg_y = Input(SInt(32.W))
-    val br_taken = Output(Bool())
+    val pred = Input(Bool())   // predicted result of whether branch is taken or not
+    val actual = Output(Bool()) // actual result of whether branch is taken or not
+    val flush = Output(Bool())
   })
-  io.br_taken := false.B
-
+  io.actual := false.B
+  io.flush := false.B
   when(io.branch) {
-    // beq
-    when(io.fnct3 === 0.U) {
-      io.br_taken := io.arg_x === io.arg_y
-    }
-    // bne
-    .elsewhen(io.fnct3 === 1.U) {
-      io.br_taken := io.arg_x =/= io.arg_y
-    }
-    // blt
-    .elsewhen(io.fnct3 === 4.U) {
-      io.br_taken := io.arg_x < io.arg_y
-    }
-    // bge
-    .elsewhen(io.fnct3 === 5.U) {
-      io.br_taken := io.arg_x >= io.arg_y
-    }
-    // bltu (unsigned less than)
-    .elsewhen(io.fnct3 === 6.U) {
-      io.br_taken := io.arg_x.asUInt < io.arg_y.asUInt
-    }
-    // bgeu (unsigned greater than or equal)
-    .elsewhen(io.fnct3 === 7.U) {
-      io.br_taken := io.arg_x.asUInt >= io.arg_y.asUInt
-    }
+    io.actual := MuxLookup(io.fnct3, false.B, Seq(
+      0.U -> (io.arg_x === io.arg_y),              // beq
+      1.U -> (io.arg_x =/= io.arg_y),              // bne
+      4.U -> (io.arg_x < io.arg_y),                // blt
+      5.U -> (io.arg_x >= io.arg_y),               // bge
+      6.U -> (io.arg_x.asUInt < io.arg_y.asUInt),  // bltu
+      7.U -> (io.arg_x.asUInt >= io.arg_y.asUInt)  // bgeu
+    ))
   }
+  io.flush := io.pred ^ io.actual
 }
